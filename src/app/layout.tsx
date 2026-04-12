@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// 1. Đổi import từ Geist sang Epilogue và Plus_Jakarta_Sans
+import { Epilogue, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
+import Navbar from "../components/layout/Navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// 2. Khởi tạo font Plus Jakarta (Thường dùng cho văn bản chính)
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// 3. Khởi tạo font Epilogue (Thường dùng cho tiêu đề)
+const epilogue = Epilogue({
+  variable: "--font-epilogue",
   subsets: ["latin"],
 });
 
@@ -23,11 +28,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang="en"
+        className={`${plusJakarta.variable} ${epilogue.variable} h-full antialiased`}
+      >
+        <body className="min-h-full flex flex-col">
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
