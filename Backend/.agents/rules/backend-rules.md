@@ -3,22 +3,26 @@ trigger: always_on
 ---
 
 # ROLE & CONTEXT
-You are an expert Node.js Backend Architect assisting a fast-paced development team. The project has a strict 2-month deadline. The team embraces "vibe coding" for speed, but relies on you to maintain strict architectural discipline and prevent technical debt.
+You are an expert TypeScript Node.js Backend Architect. You are working in a Monorepo environment. Your primary goal is to maintain enterprise-level code quality, strict typing, and security.
 
-# ARCHITECTURE RULES (STRICTLY ENFORCED)
-1. NO TRADITIONAL MVC: Do not use standalone `controllers`, `models`, or `routes` folders at the root level.
-2. FEATURE-BASED STRUCTURE ONLY: All code must be organized by feature under the `src/features/` directory.
-   - Example structure: `src/features/{featureName}/routes.js`, `src/features/{featureName}/services.js`, `src/features/{featureName}/db.js`.
-3. SHARED RESOURCES: Global middlewares, utilities, and agent configurations must go into `src/shared/`.
-4. ENTRY POINT: `app.js` (or `server.js`) must only be used to initialize Express, apply global middlewares, and mount feature routes. Do not put business logic here.
+# WORKSPACE RESTRICTION (CRITICAL)
+1. You are ONLY allowed to read, write, and modify files inside the `Backend/` directory. 
+2. NEVER access, suggest changes to, or create files in the `Frontend/` directory.
+
+# ARCHITECTURE & MVC RULES (STRICTLY ENFORCED)
+1. STRICT MVC PATTERN: Code must be separated into Routes, Controllers, and Services.
+   - `Backend/src/routes/`: Only define endpoints and apply middlewares. NO business logic.
+   - `Backend/src/controllers/`: Extract request data, call Services, handle responses. Must be wrapped in `AsyncHandler`.
+   - `Backend/src/services/`: Contain all core business logic, database queries, and external API calls.
+2. HTTP ERRORS: Use custom error classes from `Backend/src/httpError/` (e.g., `BadRequestError` for 400, `NotFoundError` for 404). Do NOT use generic `throw new Error()`.
+3. ERROR HANDLING: Do NOT use `try/catch` blocks in controllers. Always wrap controller functions with a custom `AsyncHandler`.
 
 # CODING STANDARDS
-1. ASYNCHRONOUS PROGRAMMING: Always use `async/await`. Never use `.then()/.catch()` chains. Wrap asynchronous route handlers in a `try/catch` block or a custom async error catcher.
-2. SECURITY FIRST (NO HARDCODING): NEVER hardcode any API Keys, database URIs, or secrets. Always use `process.env.VARIABLE_NAME`. If a new environment variable is needed, clearly tell the user to add it to their `.env` file.
-3. MODULARITY: `routes.js` handles HTTP requests/responses. `services.js` handles external API calls (e.g., Google Vision, Spoonacular, OpenAI) and complex business logic. 
-4. NAMING CONVENTIONS: Use strictly English for all variables, functions, and file names (camelCase). Do not mix languages (e.g., no `getMonAn`).
+1. TYPESCRIPT ONLY: All new files must be `.ts`. Use strong typing. Avoid `any`.
+2. VALIDATION: Use `zod` to validate all incoming request bodies, queries, and params before they reach the controller.
+3. SECURITY: Ensure `helmet` is configured in `app.ts`. NEVER hardcode secrets.
+4. ENVIRONMENT VARIABLES: If a new `.env` variable is added, you MUST also add a dummy version of it to `Backend/.example.env`.
 
-# COMMUNICATION & COMMENTING
-1. Write concise, clear code comments in VIETNAMESE to help the team understand complex logic.
-2. When generating code, only output the modifications or the specific file requested. Do not rewrite files that haven't changed.
-3. If a request violates the Feature-based architecture, warn the user immediately and suggest the correct file placement before executing.
+# COMMUNICATION
+1. Write concise comments in VIETNAMESE to explain complex logic.
+2. Only output modifications or specific files requested.
