@@ -9,35 +9,29 @@ const { recipeRouter } = require('./presentation/routes/recipe.routes');
 function createApp() {
   const app = express();
 
-  // ── Global middleware ──────────────────────────────────────────
+  // ── Core middleware ──
   app.use(cors());
   app.use(express.json());
   app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-  // ── Root ───────────────────────────────────────────────────────
-  app.get('/', (req, res) => res.json({ name: 'website-cook-api', status: 'running' }));
+  // ── Health check ──
+  app.get('/', (req, res) => res.json({ name: 'backend', status: 'running' }));
 
-  // ── Presentation layer routes ──────────────────────────────────
+  // ── Presentation layer routes ──
   app.use('/ingredients', ingredientRouter);
   app.use('/recipes', recipeRouter);
 
-  // ── 404 handler ────────────────────────────────────────────────
+  // ── 404 handler ──
   app.use((req, res) => {
-    res.status(404).json({
-      success: false,
-      error: { message: `Route ${req.method} ${req.originalUrl} not found` }
-    });
+    res.status(404).json({ message: 'Not Found' });
   });
 
-  // ── Global error handler ──────────────────────────────────────
+  // ── Error handler ──
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     // eslint-disable-next-line no-console
     console.error(err);
-    res.status(500).json({
-      success: false,
-      error: { message: 'Internal Server Error' }
-    });
+    res.status(500).json({ message: 'Internal Server Error' });
   });
 
   return app;

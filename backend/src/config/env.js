@@ -1,17 +1,17 @@
-require('dotenv').config();
+const path = require('path');
+const dotenv = require('dotenv');
 const { z } = require('zod');
+
+// Load .env from the backend root (one level above src/)
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const schema = z.object({
   NODE_ENV: z.string().default('development'),
   PORT: z.coerce.number().int().positive().default(3000),
-
-  // Supabase
-  SUPABASE_URL: z.string().url({ message: 'SUPABASE_URL must be a valid URL' }),
-  SUPABASE_SERVICE_KEY: z.string().min(1, 'SUPABASE_SERVICE_KEY is required'),
-
-  // AI / Gemini (optional – only needed when DB has no matching recipes)
-  GEMINI_API_KEY: z.string().optional().default(''),
-  GEMINI_MODEL: z.string().optional().default('gemini-2.0-flash')
+  SUPABASE_URL: z.string().default(''),
+  SUPABASE_SERVICE_KEY: z.string().default(''),
+  GEMINI_API_KEY: z.string().default(''),
+  GEMINI_MODEL: z.string().default('gemini-2.0-flash')
 });
 
 const raw = {
