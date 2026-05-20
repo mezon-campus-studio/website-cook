@@ -1,21 +1,13 @@
 const { RecipeService } = require('../../business/services/recipe.service');
-const { AIService } = require('../../business/services/ai.service');
-const { RecipeRepository } = require('../../repository/recipe.repository');
-const { IngredientRepository } = require('../../repository/ingredient.repository');
+const { SpoonacularRepository } = require('../../repository/spoonacular.repository');
 const { success, error: sendError } = require('../../utils/response');
 
 class RecipeController {
   constructor() {
-    // Manual dependency injection
-    const recipeRepository = new RecipeRepository();
-    const ingredientRepository = new IngredientRepository();
-    const aiService = new AIService();
+    // Manual dependency injection using SpoonacularRepository
+    const spoonacularRepository = new SpoonacularRepository();
 
-    this.recipeService = new RecipeService(
-      recipeRepository,
-      ingredientRepository,
-      aiService
-    );
+    this.recipeService = new RecipeService(spoonacularRepository);
   }
 
   /**
@@ -31,11 +23,8 @@ class RecipeController {
       // eslint-disable-next-line no-console
       console.error('RecipeController.suggest error:', err);
 
-      if (err.message.includes('GEMINI_API_KEY')) {
-        return sendError(res, err.message, 503);
-      }
-
-      return sendError(res, 'Failed to suggest recipes');
+      const statusCode = err.statusCode || 500;
+      return sendError(res, err.message || 'Failed to suggest recipes', statusCode);
     }
   }
 }

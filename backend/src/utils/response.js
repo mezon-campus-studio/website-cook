@@ -8,11 +8,13 @@
  * @param {import('express').Response} res
  * @param {*} data
  * @param {number} [statusCode=200]
+ * @param {object} [extra={}] - Extra properties to append to response body at root level.
  */
-function success(res, data, statusCode = 200) {
+function success(res, data, statusCode = 200, extra = {}) {
   return res.status(statusCode).json({
     success: true,
-    data
+    data,
+    ...extra
   });
 }
 

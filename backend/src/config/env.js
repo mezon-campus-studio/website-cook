@@ -11,7 +11,10 @@ const schema = z.object({
   SUPABASE_URL: z.string().default(''),
   SUPABASE_SERVICE_KEY: z.string().default(''),
   GEMINI_API_KEY: z.string().default(''),
-  GEMINI_MODEL: z.string().default('gemini-2.0-flash')
+  GEMINI_MODEL: z.string().default('gemini-2.0-flash'),
+  SPOONACULAR_API_KEY: z.string().default(''),
+  SPOONACULAR_BASE_URL: z.string().url().default('https://api.spoonacular.com'),
+  SPOONACULAR_TIMEOUT: z.coerce.number().int().positive().default(10000)
 });
 
 const raw = {
@@ -20,7 +23,10 @@ const raw = {
   SUPABASE_URL: process.env.SUPABASE_URL,
   SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
-  GEMINI_MODEL: process.env.GEMINI_MODEL
+  GEMINI_MODEL: process.env.GEMINI_MODEL,
+  SPOONACULAR_API_KEY: process.env.SPOONACULAR_API_KEY,
+  SPOONACULAR_BASE_URL: process.env.SPOONACULAR_BASE_URL,
+  SPOONACULAR_TIMEOUT: process.env.SPOONACULAR_TIMEOUT
 };
 
 const env = schema.parse(raw);

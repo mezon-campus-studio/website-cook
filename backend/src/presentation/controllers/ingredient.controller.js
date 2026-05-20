@@ -1,11 +1,11 @@
 const { IngredientService } = require('../../business/services/ingredient.service');
-const { IngredientRepository } = require('../../repository/ingredient.repository');
+const { SpoonacularRepository } = require('../../repository/spoonacular.repository');
 const { success, error: sendError } = require('../../utils/response');
 
 class IngredientController {
   constructor() {
-    // Manual dependency injection
-    const repository = new IngredientRepository();
+    // Manual dependency injection using SpoonacularRepository
+    const repository = new SpoonacularRepository();
     this.ingredientService = new IngredientService(repository);
   }
 
@@ -20,7 +20,8 @@ class IngredientController {
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('IngredientController.suggest error:', err);
-      return sendError(res, 'Failed to fetch ingredient suggestions');
+      const statusCode = err.statusCode || 500;
+      return sendError(res, err.message || 'Failed to fetch ingredient suggestions', statusCode);
     }
   }
 }
