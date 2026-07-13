@@ -72,6 +72,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* ── Custom Fonts (injected by next/font via CSS vars in <html>) ── */
+  --font-epilogue: var(--font-epilogue, "Epilogue", ui-sans-serif, system-ui, sans-serif);
+  --font-jakarta: var(--font-jakarta, "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif);
 }
 
 @layer base {

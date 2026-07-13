@@ -12,12 +12,12 @@ export default function IngredientPopular({
 }: IngredientPopularProps) {
   return (
     <section className="w-full flex flex-col items-center mt-12 px-16">
-      <h2 className="text-[30px] font-bold font-epilogue text-brand-orange text-[#9B3F00] ">
+      <h2 className="text-[30px] font-bold font-epilogue text-[#9B3F00]">
         Nguyên liệu phổ biến
       </h2>
       {isPending ? (
         <p className="mt-8 text-brand-muted font-jakarta">
-          Đang tải gợi ý món ăn
+          Đang tải nguyên liệu...
         </p>
       ) : items.length === 0 ? (
         <p className="mt-8 text-brand-muted font-jakarta text-center max-w-md">

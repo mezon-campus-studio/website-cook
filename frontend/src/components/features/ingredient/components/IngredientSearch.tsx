@@ -52,7 +52,7 @@ export default function IngredientSearch({
               </p>
             ) : suggestions.length === 0 ? (
               <p className="px-4 py-3 text-sm text-brand-muted font-jakarta">
-                Không có nguyên liệu phù hiệu
+                Không có nguyên liệu phù hợp
               </p>
             ) : (
               <ul className="m-0 list-none p-0">

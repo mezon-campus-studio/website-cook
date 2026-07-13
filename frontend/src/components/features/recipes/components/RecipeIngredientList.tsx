@@ -25,7 +25,7 @@ export default function IngredientList({ items }: IngredientListProps) {
             Nguyên liệu
           </span>
         </div>
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-4 mt-4">
           {items.map((item, index) => (
             <li
               className="max-w-[243px] rounded-[12px] py-2.5 pl-4 bg-[#F3F4F5] flex items-center gap-2"

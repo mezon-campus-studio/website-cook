@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useCallback, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { apiFetchJson, type RecipeFromApi } from '@/lib/api-client';
 import { readRecipeFromStorage } from '@/utils/recipeStorage';
 import { PLACEHOLDER_IMG } from '@/constants';
@@ -27,7 +27,7 @@ function mapIngredients(api: RecipeFromApi): IngredientListItem[] {
     const qty = [amount, unit].filter(Boolean).join(' ').trim();
 
     return {
-      id: i.id ?? idx, // use array index as stable fallback instead of Math.random()
+      id: i.id ?? idx,
       name: i.name ?? 'Nguyên liệu không tên',
       desc: qty || '—',
     };
@@ -75,16 +75,42 @@ function mapSteps(api: RecipeFromApi): RecipeStepDisplay[] {
 
 export default function RecipeDetailClient({ recipeId }: { recipeId: string }) {
   const [recipe, setRecipe] = useState<RecipeFromApi | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
     // Show cached data immediately for instant perceived performance
     const cached = readRecipeFromStorage(recipeId);
-    if (cached) setRecipe(cached);
+    if (cached) {
+      setRecipe(cached);
+      setIsLoading(false);
+    }
 
     // Always fetch fresh data in the background
     apiFetchJson<RecipeFromApi>(`/recipes/${recipeId}`)
-      .then(setRecipe)
-      .catch((err) => console.error('Lỗi khi gọi API chi tiết món ăn:', err));
+      .then((data) => {
+        if (!cancelled) {
+          setRecipe(data);
+          setIsLoading(false);
+          setErrorMsg(null);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          console.error('Lỗi khi gọi API chi tiết món ăn:', err);
+          // Only show error if we don't already have cached data
+          if (!cached) {
+            setErrorMsg(err instanceof Error ? err.message : 'Không tải được công thức.');
+            setIsLoading(false);
+          }
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [recipeId]);
 
   const ingredients = useMemo(
@@ -100,6 +126,37 @@ export default function RecipeDetailClient({ recipeId }: { recipeId: string }) {
       ? imgRaw
       : PLACEHOLDER_IMG;
   }, [recipe]);
+
+  // Loading state — only shown when there's no cached data yet
+  if (isLoading && !recipe) {
+    return (
+      <main className="min-h-screen flex flex-col bg-brand-bg items-center justify-center px-4">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-full border-4 border-[#FFDAD2] border-t-[#FF7A2C] animate-spin" />
+          <p className="text-brand-muted font-jakarta text-center">
+            Đang tải công thức...
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  // Error state — only shown when there's no recipe data at all
+  if (errorMsg && !recipe) {
+    return (
+      <main className="min-h-screen flex flex-col bg-brand-bg items-center justify-center px-4">
+        <div className="w-20 h-20 rounded-full bg-[#FFEDE9] flex items-center justify-center mb-6">
+          <span className="text-4xl select-none">⚠️</span>
+        </div>
+        <h1 className="text-2xl font-bold font-epilogue text-[#9B3F00] text-center mb-2">
+          Không tải được công thức
+        </h1>
+        <p className="text-brand-muted font-jakarta text-center max-w-md">
+          {errorMsg}
+        </p>
+      </main>
+    );
+  }
 
   return (
     <RecipeDetailPageView

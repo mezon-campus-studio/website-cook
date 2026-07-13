@@ -129,7 +129,7 @@ export default function RecipeCard({
           ) : (
             <Link
               href={backToIngredientsHref}
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-full bg-[#FFDAD2] font-bold text-[16px] text-jakarta text-[#9B3F00] cursor-pointer active:scale-95 transition-transform"
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-full bg-[#FFDAD2] font-bold text-[16px] font-jakarta text-[#9B3F00] cursor-pointer active:scale-95 transition-transform"
             >
               Thêm nguyên liệu
             </Link>

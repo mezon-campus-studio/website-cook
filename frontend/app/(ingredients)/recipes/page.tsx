@@ -1,4 +1,3 @@
-// File: app/recipes/page.tsx (hoặc app/(routes)/recipes/page.tsx)
 import { Suspense } from "react";
 import RecipesPageView from "@/components/features/recipes/components/RecipePageView";
 

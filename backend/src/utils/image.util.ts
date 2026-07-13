@@ -1,7 +1,7 @@
-const SPOONACULAR_INGREDIENT_CDN =
-  "https://spoonacular.com/cdn/ingredients_100x100";
-const SPOONACULAR_EQUIPMENT_CDN =
-  "https://spoonacular.com/cdn/equipment_100x100";
+import {
+  SPOONACULAR_INGREDIENT_CDN,
+  SPOONACULAR_EQUIPMENT_CDN,
+} from '../constants';
 
 export function normalizeImageUrl(
   value: string | null | undefined,

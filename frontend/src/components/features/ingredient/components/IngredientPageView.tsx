@@ -6,7 +6,7 @@ import {
 } from '@/components/features/ingredient';
 import { useIngredientPage } from '@/hooks/ingredient/useIngredientPage';
 
-export default function HomePageView() {
+export default function IngredientPageView() {
   const {
     selected,
     onAdd,

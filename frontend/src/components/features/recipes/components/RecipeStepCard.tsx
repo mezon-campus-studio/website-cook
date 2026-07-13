@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function StepCard({
   step,
@@ -12,11 +12,7 @@ export default function StepCard({
   title: string;
   desc: string;
 }) {
-  const [currentImage, setCurrentImage] = useState(image);
-
-  React.useEffect(() => {
-    setCurrentImage(image);
-  }, [image]);
+  const [imgSrc, setImgSrc] = useState(image);
 
   return (
     <article className="w-full max-w-[809px] flex justify-between rounded-2xl border border-[#E7E8E9] p-6">
@@ -29,18 +25,18 @@ export default function StepCard({
             {title}
           </span>
         </div>
-        <p className=" text-base max-w-[511px] w-full text-[#72544E] font-epilogue leading-[26px] whitespace-pre-line">
+        <p className="text-base max-w-[511px] w-full text-[#72544E] font-epilogue leading-[26px] whitespace-pre-line">
           {desc}
         </p>
       </div>
       <div className="relative h-[160px] w-[224px] shrink-0 overflow-hidden rounded-[16px]">
         <Image
           className="object-cover"
-          src={currentImage}
+          src={imgSrc}
           alt={title}
           fill
-          unoptimized={currentImage.startsWith("http")}
-          onError={() => setCurrentImage("/assets/icons/chef.svg")}
+          unoptimized={imgSrc.startsWith("http")}
+          onError={() => setImgSrc("/assets/icons/chef.svg")}
         />
       </div>
     </article>
